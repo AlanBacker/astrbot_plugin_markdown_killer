@@ -27,7 +27,7 @@ class MarkdownKillerPlugin(Star):
             original_preview = original_text[:50].replace('\n', '\\n')
             cleaned_preview = cleaned_text[:50].replace('\n', '\\n')
             log_msg = f"[Markdown Killer] 检测到Markdown并移除: {original_preview}... -> {cleaned_preview}..."
-            logger.info(log_msg)
+            logger.warning(log_msg)
             print(log_msg) # 强制输出到控制台以确保可见
 
     def remove_markdown(self, text: str) -> str:
