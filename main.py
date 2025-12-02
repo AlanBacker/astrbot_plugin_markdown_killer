@@ -24,7 +24,9 @@ class MarkdownKillerPlugin(Star):
         if original_text != cleaned_text:
             resp.completion_text = cleaned_text
             # 使用 logger 提醒
-            logger.warning(f"[Markdown Killer] 检测到Markdown并移除: {original_text[:20]}... -> {cleaned_text[:20]}...")
+            log_msg = f"[Markdown Killer] 检测到Markdown并移除: {original_text[:50].replace('\n', '\\n')}... -> {cleaned_text[:50].replace('\n', '\\n')}..."
+            logger.info(log_msg)
+            print(log_msg) # 强制输出到控制台以确保可见
 
     def remove_markdown(self, text: str) -> str:
         """
