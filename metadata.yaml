@@ -1,5 +1,5 @@
 name: astrbot_plugin_markdown_killer
-version: 0.0.5
+version: 0.0.6
 author: AlanBacker
 desc: 移除输出中的Markdown格式
 repo: https://github.com/AlanBacker/astrbot_plugin_markdown_killer

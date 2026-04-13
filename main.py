@@ -4,7 +4,7 @@ from astrbot.api.provider import LLMResponse
 from astrbot.api import logger, AstrBotConfig
 import re
 
-@register("astrbot_plugin_markdown_killer", "AlanBacker", "移除输出中的Markdown格式（添加全局控制开关）", "0.0.5", "https://github.com/AlanBacker/astrbot_plugin_markdown_killer")
+@register("astrbot_plugin_markdown_killer", "AlanBacker", "移除输出中的Markdown格式（添加全局控制开关）", "0.0.6", "https://github.com/AlanBacker/astrbot_plugin_markdown_killer")
 class MarkdownKillerPlugin(Star):
     def __init__(self, context: Context, config: AstrBotConfig):
         super().__init__(context)
