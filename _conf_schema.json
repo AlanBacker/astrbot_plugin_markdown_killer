@@ -1,0 +1,8 @@
+{
+  "enable_global_markdown_killer": {
+    "description": "全局 Markdown 移除",
+    "type": "bool",
+    "default": false,
+    "hint": "开启后，将从所有即将发送的最终文本消息中移除 Markdown 格式（而不仅限于 LLM 直接输出的内容）。"
+  }
+}
