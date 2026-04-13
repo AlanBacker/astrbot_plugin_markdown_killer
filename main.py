@@ -61,33 +61,35 @@ class MarkdownKillerPlugin(Star):
         移除文本中的Markdown格式
         """
         # 移除代码块 (保留内容)
-        # 合并处理: 使用 DOTALL 模式匹配 ```...```，非贪婪匹配
-        # 尝试移除语言标识符 (如果后面紧跟空白字符)
         text = re.sub(r"```(?:[a-zA-Z0-9+\-]*\s+)?([\s\S]*?)```", r"\1", text)
 
         # 移除行内代码 `code` -> code
         text = re.sub(r"`([^`]+)`", r"\1", text)
         
-        # 移除粗体/斜体 - 优化以避免误伤数学公式
-        # Bold: **text** or __text__
-        text = re.sub(r"\*\*([^*]+)\*\*", r"\1", text)
-        text = re.sub(r"__([^_]+)__", r"\1", text)
+        # 移除图片 ![alt](url) -> alt (提前于普通链接处理避免残留 "!")
+        text = re.sub(r"!\[([^\]]*)\]\([^)]+\)", r"\1", text)
         
-        # Italic: *text* or _text_
-        # 严格模式: * 前后不能有空格 (CommonMark 标准)，且 * 必须位于词边界或非单词字符旁
-        text = re.sub(r"(^|[^\w\*])\*(?!\s)([^*]+)(?<!\s)\*(?=$|[^\w\*])", r"\1\2", text)
-        text = re.sub(r"(^|[^\w_])_(?!\s)([^_]+)(?<!\s)_(?=$|[^\w_])", r"\1\2", text)
-        
-        # 移除标题 (移除 # 但保留文本)
-        text = re.sub(r"^(#{1,6})\s+(.*)", r"\2", text, flags=re.MULTILINE)
-        
-        # 移除引用 (移除 > 但保留文本)
-        text = re.sub(r"^>\s+(.*)", r"\1", text, flags=re.MULTILINE)
-        
-        # 移除链接 [text](url) -> text
+        # 移除普通链接 [text](url) -> text
         text = re.sub(r"\[([^\]]+)\]\([^)]+\)", r"\1", text)
         
-        # 移除列表标记 (移除行首的 - 或 *)
-        text = re.sub(r"^\s*[-*]\s+(.*)", r"\1", text, flags=re.MULTILINE)
+        # 移除粗体 - 使用非贪婪匹配以支持内部包含特殊符号的情况
+        text = re.sub(r"\*\*(.*?)\*\*", r"\1", text)
+        text = re.sub(r"__(.*?)__", r"\1", text)
+        
+        # 移除斜体 - 严格模式，避免误伤数学公式 (3 * 4 = 12) 或变量名 (this_is_var)
+        text = re.sub(r"(?<!\*)\*(?!\s)(.*?)(?<!\s)\*(?!\*)", r"\1", text)
+        text = re.sub(r"(?<!\w)_(?!\s)(.*?)(?<!\s)_(?!\w)", r"\1", text)
+        
+        # 移除删除线
+        text = re.sub(r"~~(.*?)~~", r"\1", text)
+        
+        # 移除标题 (包含多级标题)
+        text = re.sub(r"^(#{1,6})\s+(.*)", r"\2", text, flags=re.MULTILINE)
+        
+        # 移除引用 (处理嵌套情况: >>> text -> text)
+        text = re.sub(r"^(?:>\s*)+(.*)", r"\1", text, flags=re.MULTILINE)
+        
+        # 移除列表标记 (移除行首的 -, *, +)
+        text = re.sub(r"^\s*[-*+]\s+(.*)", r"\1", text, flags=re.MULTILINE)
         
         return text
