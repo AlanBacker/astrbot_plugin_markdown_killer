@@ -4,5 +4,11 @@
     "type": "bool",
     "default": false,
     "hint": "开启后，将从所有即将发送的最终文本消息中移除 Markdown 格式（而不仅限于 LLM 直接输出的内容）。"
+  },
+  "strip_leaked_markup": {
+    "description": "清除 XML/CDATA 残留",
+    "type": "bool",
+    "default": true,
+    "hint": "模型偶尔会在回复末尾漏出 ]]></text> 这类标记。开启后发送前清掉，并同步清掉存进对话历史的那条回复，免得模型照着历史继续抄。"
   }
 }
